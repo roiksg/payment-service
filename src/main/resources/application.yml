@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: ${APPLICATION_NAME}
+
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  liquibase:
+    change-log: classpath:${CHANGELOG_BASE}/${CHANGELOG_FILE_NAME}
+    enabled: true
+  mongodb:
+    uri: ${DATASOURCE_URL}
+
+external:
+  random-api: ${RANDOM_API}
+
+server:
+  port: ${SERVER_PORT}
