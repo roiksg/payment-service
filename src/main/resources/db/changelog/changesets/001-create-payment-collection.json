@@ -1,0 +1,45 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "001-create-payments-collection-and-indexes",
+        "author": "developer",
+        "changes": [
+          {
+            "createCollection": {
+              "collectionName": "payments"
+            }
+          },
+          {
+            "createIndex": {
+              "collectionName": "payments",
+              "indexName": "idx_userId",
+              "keys": "{ userId: 1 }"
+            }
+          },
+          {
+            "createIndex": {
+              "collectionName": "payments",
+              "indexName": "idx_orderId",
+              "keys": "{ orderId: 1 }"
+            }
+          },
+          {
+            "createIndex": {
+              "collectionName": "payments",
+              "indexName": "idx_status",
+              "keys": "{ status: 1 }"
+            }
+          },
+          {
+            "createIndex": {
+              "collectionName": "payments",
+              "indexName": "idx_timestamp",
+              "keys": "{ timestamp: 1 }"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
