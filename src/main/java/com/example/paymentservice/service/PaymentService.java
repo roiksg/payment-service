@@ -1,17 +1,18 @@
 package com.example.paymentservice.service;
 
 
+import com.example.paymentservice.producer.PaymentEventProducer;
 import com.example.paymentservice.dto.PaymentCreateDto;
 import com.example.paymentservice.dto.PaymentResponseDto;
 import com.example.paymentservice.dto.PaymentSearchDto;
 import com.example.paymentservice.entity.Payment;
 import com.example.paymentservice.mapper.PaymentMapper;
 import com.example.paymentservice.repository.PaymentRepository;
-import groovy.util.logging.Slf4j;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,6 @@ public class PaymentService {
     private String randomApiUrl;
 
     public PaymentResponseDto create(PaymentCreateDto dto) {
-        // Генерируем случайное число
         Integer random = webClient.get()
             .uri(randomApiUrl)
             .retrieve()
@@ -46,7 +46,6 @@ public class PaymentService {
 
         payment = repository.save(payment);
 
-        // Отправляем событие в Kafka
         producer.sendCreatePaymentEvent(payment);
 
         return mapper.toDto(payment);
