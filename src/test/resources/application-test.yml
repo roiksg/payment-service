@@ -1,0 +1,19 @@
+spring:
+  application.name: payment-test
+  kafka:
+    bootstrap-servers: ${spring.kafka.bootstrap-servers}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+SERVER_PORT: 0
+DATASOURCE_URL: mongodb://localhost:27017/payments
+external:
+  random-api: http://localhost:8089/integers/?num=1&min=1&max=100&col=1&base=10&format=plain&rnd=new
+testcontainers:
+  reuse:
+    enable: true
+  pull:
+    timeout: 10m
+  startup:
+    timeout: 10m
