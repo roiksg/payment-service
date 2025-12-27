@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: payments
+      MONGO_INITDB_ROOT_PASSWORD: payments
+      MONGO_INITDB_DATABASE: payments
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - payment-net
+
+  kafka:
+    image: apache/kafka:latest
+    container_name: kafka
+    restart: unless-stopped
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      CLUSTER_ID: 4L6g3nShT-eMCtK--X86sw
+    volumes:
+      - kafka_data:/opt/kafka/data
+    networks:
+      - payment-net
+
+  payment-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: payment-service
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - kafka
+    ports:
+      - "8095:8095"
+    environment:
+      APPLICATION_NAME: payment
+      SERVER_PORT: 8095
+      DATASOURCE_URL: mongodb://payments:payments@mongodb:27017/payments?authSource=admin
+      KAFKA_SERVER: kafka:9092
+      RANDOM_API: https://www.random.org/integers/?num=1&min=1&max=100&col=1&base=10&format=plain&rnd=new
+      CHANGELOG_BASE: db/changelog
+      CHANGELOG_FILE_NAME: db.changelog-master.yaml
+    networks:
+      - payment-net
+
+networks:
+  payment-net:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  kafka_data:
