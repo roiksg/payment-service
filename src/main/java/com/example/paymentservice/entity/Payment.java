@@ -11,13 +11,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "payments")
 public class Payment {
     @Id
-    private String id;               // Mongo ObjectId
+    private String id;
 
-    private Long orderId;            // теперь Long
+    private Long orderId;
 
-    private UUID userId;             // теперь UUID
+    private UUID userId;
 
-    private String status;           // SUCCESS / FAILED
+    private String status;
 
     private Instant timestamp;
 

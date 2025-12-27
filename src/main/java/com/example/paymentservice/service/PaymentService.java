@@ -32,12 +32,13 @@ public class PaymentService {
     private String randomApiUrl;
 
     public PaymentResponseDto create(PaymentCreateDto dto) {
-        Integer random = webClient.get()
+        String randomStr = webClient.get()
             .uri(randomApiUrl)
             .retrieve()
-            .bodyToMono(Integer.class)
+            .bodyToMono(String.class)
             .block();
 
+        Integer random = Integer.parseInt(randomStr.trim());
         String status = (random % 2 == 0) ? "SUCCESS" : "FAILED";
 
         Payment payment = mapper.toEntity(dto);

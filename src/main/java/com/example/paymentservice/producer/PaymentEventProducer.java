@@ -14,7 +14,6 @@ public class PaymentEventProducer {
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public void sendCreatePaymentEvent(Payment payment) {
-        // Простейший DTO для события
         var event = new PaymentEvent(payment.getId(), payment.getStatus());
         kafkaTemplate.send("payment-events", event);
         log.info("Отправлено событие CREATE_PAYMENT: {}", event);

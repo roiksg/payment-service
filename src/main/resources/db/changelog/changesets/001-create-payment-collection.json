@@ -3,7 +3,7 @@
     {
       "changeSet": {
         "id": "001-create-payments-collection-and-indexes",
-        "author": "developer",
+        "author": "Roik Sergei",
         "changes": [
           {
             "createCollection": {
